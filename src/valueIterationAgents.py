@@ -44,7 +44,19 @@ class ValueIterationAgent(ValueEstimationAgent):
         self.values = util.Counter() # A Counter is a dict with default 0
 
         # Write value iteration code here
-        "*** YOUR CODE HERE ***"
+        states = self.mdp.getStates()
+        for i in range(iterations):
+            for s in states:
+                ps_actions = self.mdp.getPossibleActions(s)
+                if ps_actions:
+                    sigmas_a = []
+                    for a in ps_actions:
+                        sigma_a = 0
+                        for st, p in self.mdp.getTransitionStatesAndProbs(s, a):
+                            sigma_a += p*(self.discount*self.values[st] + self.mdp.getReward(s, a, st))
+                        sigmas_a.append((a, sigma_a))
+                    a_max = max(sigmas_a, key=lambda x: x[1])
+                    self.values[s] = a_max[1]
 
 
     def getValue(self, state):
@@ -59,8 +71,11 @@ class ValueIterationAgent(ValueEstimationAgent):
           Compute the Q-value of action in state from the
           value function stored in self.values.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        acum = 0
+        for st, p in self.mdp.getTransitionStatesAndProbs(state, action):
+            acum += p*(self.mdp.getReward(state, action, st) + self.discount*self.values[st])
+        return acum
+
 
     def computeActionFromValues(self, state):
         """
@@ -71,8 +86,11 @@ class ValueIterationAgent(ValueEstimationAgent):
           there are no legal actions, which is the case at the
           terminal state, you should return None.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        if self.mdp.isTerminal(state):
+            return None
+        else:
+            p_as = self.mdp.getPossibleActions(state)
+            return max([(p_a, self.computeQValueFromValues(state, p_a)) for p_a in p_as], key = lambda x: x[1])[0]
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
