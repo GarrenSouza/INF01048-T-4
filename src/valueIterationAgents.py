@@ -50,11 +50,7 @@ class ValueIterationAgent(ValueEstimationAgent):
             for s in states:
                 ps_actions = self.mdp.getPossibleActions(s)
                 if ps_actions:
-                    sigmas_a = []
-                    for a in ps_actions:
-                        sigmas_a.append((a, self.computeQValueFromValues(s, a)))
-                    a_max = max(sigmas_a, key=lambda x: x[1])
-                    values_km1[s] = a_max[1]
+                    values_km1[s] = self.computeQValueFromValues(s, self.computeActionFromValues(s))
             self.values = values_km1
 
 
