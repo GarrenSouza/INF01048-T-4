@@ -46,17 +46,16 @@ class ValueIterationAgent(ValueEstimationAgent):
         # Write value iteration code here
         states = self.mdp.getStates()
         for i in range(iterations):
+            values_km1 = util.Counter()
             for s in states:
                 ps_actions = self.mdp.getPossibleActions(s)
                 if ps_actions:
                     sigmas_a = []
                     for a in ps_actions:
-                        sigma_a = 0
-                        for st, p in self.mdp.getTransitionStatesAndProbs(s, a):
-                            sigma_a += p*(self.discount*self.values[st] + self.mdp.getReward(s, a, st))
-                        sigmas_a.append((a, sigma_a))
+                        sigmas_a.append((a, self.computeQValueFromValues(s, a)))
                     a_max = max(sigmas_a, key=lambda x: x[1])
-                    self.values[s] = a_max[1]
+                    values_km1[s] = a_max[1]
+            self.values = values_km1
 
 
     def getValue(self, state):
