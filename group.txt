@@ -1,0 +1,6 @@
+# Componentes do Grupo
+| Nome | Matrícula | Turma |
+| ---- | --------- | ----- |
+| Garrenlus de Souza         | 00315521 | Turma A |
+| Júlia Pelayo Rodrigues     | 00315868 | Turma A |
+| Leonardo Rodrigues Pedroso | 00265001 | Turma A |
